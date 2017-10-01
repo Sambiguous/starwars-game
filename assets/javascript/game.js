@@ -1,5 +1,5 @@
-var fightInProgress = false;
-
+var states = ["select attacker", "select defender", "fighting"];
+var state = states[0];
 
 
 function characterCreator(name, hp, atk_pts){
@@ -24,22 +24,36 @@ var char_array = [luke, boba, jaba, vader, han]
 function fillLobby(chars){
     var img_path = "assets/images/"
     for(i = 0; i < chars.length; i ++){
+
         //create div
         chrDiv = $("<div class='card' id=" + chars[i].id + "></div>");
+
         //fill innerHTML of div (there has got to be a better way to do this)
         chrDiv.html("<h3>" + chars[i].name + "</h3>" +
                     "<img src='" + img_path + chars[i].img +"'/>" + "<br>" +
                     "<div class='left'> HP: " + chars[i].hp + "</div>" +
                     "<div class='right'>ATK: " + chars[i].base_atk + " </div>")
 
-
-
-
-
+        //append chrDiv to lobby           
         $("#lobby").append(chrDiv);
 
     }
 }
+
+function select(card){
+    var cardDiv = $("#" + card);
+    if(state == "select attacker"){
+        cardDiv.addClass("player");
+        $("#attacker").append(cardDiv);
+        state = states[1];  
+    }
+    else if(state == "select defender"){
+        cardDiv.addClass("defender");
+        $("#defender").append(cardDiv);
+        state = states[2];
+    }
+}
+
 
 function selectAttacker(character){
     if(fightInProgress){return};
@@ -79,7 +93,12 @@ function fight(attacker, defender){// this is the attack button
     //HEALTH BAR
 }
 
-window.onload = function(){
+$(document).ready(function(){
     fillLobby(char_array);
 
-};
+    $(".card").on("click", function(ev) {
+        var char = event.currentTarget.id;
+        select(char)
+    });
+
+});

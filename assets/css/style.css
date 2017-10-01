@@ -35,3 +35,12 @@
     width: calc(50% - 5px);
     text-align: right;
 }
+
+.player {
+    background-color: black;
+    color: white;
+}
+
+.defender {
+    border-color: red;
+}
