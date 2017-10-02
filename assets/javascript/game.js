@@ -47,20 +47,20 @@ function fillLobby(chars){
 }
 
 function select(card){
-    //grab DOM element based on the card parameter, whice coresponds to a specific id
+    //grab DOM element based on the card parameter, which coresponds to a specific id
     var cardDiv = $("#" + card);
 
     //make sure element has not been selected yet
     if(fighters.includes(card)){return}
 
-    //log name of selected character to the fighters array
+    //log name of selected character to the 'fighters' array
     fighters.push(cardDiv.data("id"))
 
     
     if(state == "select player"){
 
-        //add user class to selected character and move him to the arena
-        cardDiv.addClass("user picked hide_ovf");
+        //add appropriate classes to selected character and move him to the arena
+        cardDiv.addClass("picked hide_ovf");
         $("#player").append($('.user'));
 
         //set state to 'select opponent'
