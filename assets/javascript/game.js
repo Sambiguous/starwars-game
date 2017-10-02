@@ -1,4 +1,4 @@
-var states = ["select player", "select opponent", "fighting"];
+var states = ["select player", "select opponent", "fighting", "restart"];
 var state = states[0];
 var fighters = [];
 
@@ -87,21 +87,64 @@ function select(card){
     else{return};
 };
 
+function checkCondition(attacker, defender){// parameters are javascript objects
 
+    if(attacker.hp < 1){//if attacker (player) is dead
+        
+        //set approrpriate classes and move DOM to gravyard div
+        var player_dom = $("#" + attacker.id);
+        player_dom.addClass("faded");
+        player_dom.removeClass("picked");
+        $("#graveyard").append(player_dom);
 
-function updateStats(attacker, defender){
-    var player = $("#" + attacker.id)
-    var opponent = $("#" + defender.id)
+        //modify globals
+        state = states[3];
+    }
+    else if(defender.hp < 1){//if defender (opponent) is dead...
 
-    $("#" + attacker.id + " .hp").html("HP: " + player.data("hp"));
-    $("#" + attacker.id + " .atk").html("ATK: " + player.data("atk_pts"));
+        //set approrpriate classes and move DOM to gravyard div
+        var defender_dom = $("#" + defender.id);
+        defender_dom.addClass("faded");
+        defender_dom.removeClass("picked");
+        $("#graveyard").append(defender_dom);
 
-    $("#" + defender.id + " .hp").html("HP: " + opponent.data("hp"));
-    $("#" + defender.id + " .atk").html("ATK: " + opponent.data("atk_pts"));
+        //unfade cards in lobby
+        $("#lobby").children().removeClass("faded");
 
+        //modify globals
+        state = states[1];
+        fighters = fighters.slice(0, 1);
+        console.log(fighters);
+    }
 }
 
-function fight(attacker, defender){// this is the attack button
+
+function updateStats(attacker, defender){// parameters are javascript objects
+
+    //update player stats
+    if(attacker.hp > 0){
+        $("#" + attacker.id + " .hp").html("HP: " + attacker.hp);
+    }
+    else{
+        $("#" + attacker.id + " .hp").html("HP: 0");
+    }
+    $("#" + attacker.id + " .atk").html("ATK: " + attacker.atk_pts);
+
+    //updata opponent stats
+    if(defender.hp > 0){
+        $("#" + defender.id + " .hp").html("HP: " + defender.hp);
+    }
+    else{
+        $("#" + defender.id + " .hp").html("HP: 0");
+    }
+    $("#" + defender.id + " .atk").html("ATK: " + defender.atk_pts);
+
+};
+
+function fight(attacker, defender){// this is the attack button, parameters are DOM objects
+
+    if(state != states[2]){return};
+
     player = attacker.data();
     opponent = defender.data();
 
@@ -109,13 +152,10 @@ function fight(attacker, defender){// this is the attack button
     player.hp -= opponent.base_atk;
     player.atk_pts += player.base_atk;
 
-    updateStats(player, opponent)
+    updateStats(player, opponent);
 
-    if(defender.hp < 1){
-        var id = "#" + defender.name;
-        $(id).html("");
-        fightInProgress = false
-    }
+    checkCondition(player, opponent);
+
     //display hp and atk pts for atker and dfnder 
     //HEALTH BAR
 }
