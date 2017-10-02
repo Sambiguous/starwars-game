@@ -1,46 +1,100 @@
 .card {
-    text-align: center;
+    color: white;
     border: 3px solid green;
-    border-radius: 3px;
+    background-color: black;
+    text-align: center;
+    border-radius: 10px;
     display: inline-block;
-    background-color: grey;
     margin: 2px;
-}
-
-.card h3{
-    padding: 0px;
-    margin: 5px 0px;
+    padding: 0px 3px;
 }
 
 .card p {
+    margin: 3px 0px;
     display: block;
-    margin-bottom: 0px;
+    text-decoration: underline;
+}
+
+.hide_ovf {
+    overflow: hidden;
 }
 
 .card img {
-    height: 120px;
-    width: 160px;
+    max-width: 120px;
+    max-height: 120px;
+
 }
 
-.left {
-    padding-left: 5px;
+.cardstat {
+    margin: 3px 0px;
+    font-size: 13px;
     display: inline-block;
-    width: calc(50% - 5px);
-    text-align: left;
+    width: 50%;
+    text-align: center;
 }
 
-.right {
-    padding-right: 5px;
-    display: inline-block;
-    width: calc(50% - 5px);
-    text-align: right;
+.picked {
+    width: 100%;
 }
 
-.player {
-    background-color: black;
-    color: white;
-}
-
-.defender {
+.enemy {
     border-color: red;
 }
+
+.faded {
+    opacity: 0.5;
+}
+
+.fighter {
+    text-align: center;
+}
+
+#start {
+    border: 3px solid black;
+    border-radius: 5px;
+    text-align: center;
+    float: right;
+    display: inline-block;
+}
+
+#lobby {
+    background-color: grey;
+    text-align: center;
+}
+
+#vs {
+    text-align: center;
+}
+
+
+#vs img {
+    margin: auto;
+    display: block;
+    max-height: 100px;
+    max-width: 100px;
+}
+
+.arena_div {
+    display: inline-block;
+    width: 30%;
+    margin: 0px;
+}
+
+
+@media only screen and (min-width: 991px){
+ 
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    /*this is straight up voodoo magic from stack overflow.
+    its purpose is to control the character images overflowing
+    their parent divs as the page shrinks*/
+    .card img {
+        position: relative;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        -o-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+    }
