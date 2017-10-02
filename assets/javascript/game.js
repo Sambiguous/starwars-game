@@ -60,7 +60,7 @@ function select(card){
     if(state == "select player"){
 
         //add appropriate classes to selected character and move him to the arena
-        cardDiv.addClass("picked hide_ovf");
+        cardDiv.addClass("user picked hide_ovf");
         $("#player").append($('.user'));
 
         //set state to 'select opponent'
@@ -69,7 +69,7 @@ function select(card){
     
     else if(state == "select opponent"){
 
-        //add opponent class to selected character, and move him to the arena
+        //add appropriate classes to selected character, and move him to the arena
         cardDiv.addClass("enemy picked hide_ovf");
         $("#opponent").append(cardDiv);
 
@@ -80,12 +80,10 @@ function select(card){
         $("#vs img").attr("src", "assets/images/vs.png");
         $("#atk_btn").removeClass("faded");
 
-
-
-
         //set state to 'fighting'
         state = states[2];
         }
+
     else{return};
 };
 
