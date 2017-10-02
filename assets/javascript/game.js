@@ -120,9 +120,9 @@ function checkCondition(attacker, defender){// parameters are javascript objects
 
 function combatLog(attacker, defender){
     var entry = $("<div class='entry'></div>")
-    entry.html("<p>You hit<span class='enemy_name'> " + defender.name + "</span> for<span class='log_dmg'> " + attacker.atk_pts + " </span>damage</p>" +
-                "<p><span class='enemy_name'> " + defender.name + "</span> hits you back for<span class='log_dmg'> " + defender.base_atk + "</span>damage</p>");
-    $("#battleLog").prepend(entry);
+    entry.html("<p>You hit<span style='color: " + defender.id + ";'> " + defender.name + "</span> for<span class='log_dmg'> " + attacker.atk_pts + " </span>damage</p>" +
+                "<p><span style='color: " + defender.id + ";'> " + defender.name + "</span> hits you back for<span class='log_dmg'> " + defender.base_atk + " </span>damage</p>");
+    $("#combatLog").prepend(entry);
 }
 
 
@@ -138,7 +138,7 @@ function updateStats(attacker, defender){// parameters are javascript objects
     }
     $("#" + attacker.id + " .atk").html("ATK: " + attacker.atk_pts);
 
-    //updata opponent stats
+    //update opponent stats
     if(defender.hp > 0){
         $("#" + defender.id + " .hp").html("HP: " + defender.hp);
     }

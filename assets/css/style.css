@@ -47,13 +47,17 @@
 }
 
 .log_dmg {
-    color: green;
+    color: tomato;
     font-weight: bold;
 }
 
 .entry {
-    background-color: grey;
+    background-color: #8D4949;
     border: 1px solid black;
+}
+
+#combatLog {
+    height: 250px;
 }
 
 .faded {
