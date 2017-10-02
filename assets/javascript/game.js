@@ -118,6 +118,13 @@ function checkCondition(attacker, defender){// parameters are javascript objects
     }
 }
 
+function combatLog(attacker, defender){
+    var entry = $("<div class='entry'></div>")
+    entry.html("<p>You hit<span class='enemy_name'> " + defender.name + "</span> for<span class='log_dmg'> " + attacker.atk_pts + " </span>damage</p>" +
+                "<p><span class='enemy_name'> " + defender.name + "</span> hits you back for<span class='log_dmg'> " + defender.base_atk + "</span>damage</p>");
+    $("#battleLog").prepend(entry);
+}
+
 
 function updateStats(attacker, defender){// parameters are javascript objects
 
@@ -127,6 +134,7 @@ function updateStats(attacker, defender){// parameters are javascript objects
     }
     else{
         $("#" + attacker.id + " .hp").html("HP: 0");
+        
     }
     $("#" + attacker.id + " .atk").html("ATK: " + attacker.atk_pts);
 
@@ -138,7 +146,7 @@ function updateStats(attacker, defender){// parameters are javascript objects
         $("#" + defender.id + " .hp").html("HP: 0");
     }
     $("#" + defender.id + " .atk").html("ATK: " + defender.atk_pts);
-
+    combatLog(attacker, defender);
 };
 
 function fight(attacker, defender){// this is the attack button, parameters are DOM objects

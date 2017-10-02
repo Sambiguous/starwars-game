@@ -41,6 +41,21 @@
     border-color: red;
 }
 
+.enemy_name {
+    color: blue;
+    font-weight: bold;
+}
+
+.log_dmg {
+    color: green;
+    font-weight: bold;
+}
+
+.entry {
+    background-color: grey;
+    border: 1px solid black;
+}
+
 .faded {
     opacity: 0.5;
 }
