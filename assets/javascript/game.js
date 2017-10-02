@@ -1,6 +1,7 @@
 var states = ["select player", "select opponent", "fighting"];
 var state = states[0];
-var picked = [];
+var fighters = [];
+
 
 
 function characterCreator(name, hp, atk_pts){
@@ -14,11 +15,11 @@ function characterCreator(name, hp, atk_pts){
     return output;
     }
 
-var red = characterCreator("Red Knight", 150, 40);
-var orange = characterCreator("Orange Knight", 10, 2);
-var green = characterCreator("Green Knight", 500, 3);
-var blue = characterCreator("Blue Knight", 200, 50);
-var grey = characterCreator("Grey Knight", 100, 40);
+var red = characterCreator("Red Knight", 100, 10);
+var orange = characterCreator("Orange Knight", 100, 10);
+var green = characterCreator("Green Knight", 100, 10);
+var blue = characterCreator("Blue Knight", 100, 10);
+var grey = characterCreator("Grey Knight", 100, 10);
 
 var char_array = [red, orange, green, blue, grey];
 
@@ -29,11 +30,15 @@ function fillLobby(chars){
         //create div
         chrDiv = $("<div class='card' id=" + chars[i].id + "></div>");
 
+        //set data variable of div equal to appropriate character object
+        chrDiv.data(chars[i])
+
         //fill innerHTML of div (there has got to be a better way to do this)
         chrDiv.html("<p>" + chars[i].name + "</p>" +
                     "<img src='" + img_path + chars[i].img +"'/>" + "<br>" +
-                    "<div class='cardstat'>HP: " + chars[i].hp + "</div>" +
-                    "<div class='cardstat'>ATK: " + chars[i].base_atk + "</div>")
+                    "<div class='cardstat hp'>HP: " + chars[i].hp + "</div>" +
+                    "<div class='cardstat atk'>ATK: " + chars[i].base_atk + "</div>")
+
 
         //append chrDiv to lobby           
         $("#lobby").append(chrDiv);
@@ -42,11 +47,15 @@ function fillLobby(chars){
 }
 
 function select(card){
-    var id = "#" + card;
+    //grab DOM element based on the card parameter, whice coresponds to a specific id
     var cardDiv = $("#" + card);
-    if(picked.includes(id)){return};
 
-    picked.push(id);
+    //make sure element has not been selected yet
+    if(fighters.includes(card)){return}
+
+    //log name of selected character to the fighters array
+    fighters.push(cardDiv.data("id"))
+
     
     if(state == "select player"){
 
@@ -83,14 +92,26 @@ function select(card){
 
 
 function updateStats(attacker, defender){
-    //update the scoreboard after each press of the attack button
-    //don't show attack power
+    var player = $("#" + attacker.id)
+    var opponent = $("#" + defender.id)
+
+    $("#" + attacker.id + " .hp").html("HP: " + player.data("hp"));
+    $("#" + attacker.id + " .atk").html("ATK: " + player.data("atk_pts"));
+
+    $("#" + defender.id + " .hp").html("HP: " + opponent.data("hp"));
+    $("#" + defender.id + " .atk").html("ATK: " + opponent.data("atk_pts"));
+
 }
 
 function fight(attacker, defender){// this is the attack button
-    defender.hp -= attacker.atk_pts;
-    attack.hp -= defender.base_atk;
-    attacker.atk_pts += attacker.base_atk
+    player = attacker.data();
+    opponent = defender.data();
+
+    opponent.hp -= player.atk_pts;
+    player.hp -= opponent.base_atk;
+    player.atk_pts += player.base_atk;
+
+    updateStats(player, opponent)
 
     if(defender.hp < 1){
         var id = "#" + defender.name;
@@ -108,5 +129,11 @@ $(document).ready(function(){
         var char = event.currentTarget.id;
         select(char)
     });
+
+    $("#atk_btn").on("click", function() {
+        var player = $("#" + fighters[0]);
+        var opponent = $("#" + fighters[1]);
+        fight(player, opponent);
+    })
 
 });
