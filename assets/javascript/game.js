@@ -61,8 +61,9 @@ function select(card){
 
         //add appropriate classes to selected character and move him to the arena
         cardDiv.addClass("user");
-        $("#player").append($('.user'));
 
+        //animate selected card to appropriate parent div
+        moveAnimate(cardDiv, $("#player"))
         //set state to 'select opponent'
         state = states[1];  
     }
@@ -71,8 +72,8 @@ function select(card){
 
         //add appropriate classes to selected character, and move him to the arena
         cardDiv.addClass("enemy");
-        $("#opponent").append(cardDiv);
-
+        // $("#opponent").append(cardDiv);
+        moveAnimate(cardDiv, $("#opponent"))
         //fade out remaining characters
         $("#lobby").children().addClass("faded");
 
@@ -87,6 +88,41 @@ function select(card){
     else{return};
 };
 
+
+function moveAnimate(element, target){
+
+    //record starting position
+    var oldOffset = element.offset();
+
+    //append element to target div
+    element.appendTo(target);
+
+    //record final position
+    var newOffset = element.offset();
+
+    //create temporary clone of element to be animated
+    var temp = element.clone().appendTo("body")
+    
+    //apply css magic and absurdly high z-index
+    temp.css({
+        'position': 'absolute',
+        'left': oldOffset.left,
+        'top': oldOffset.top,
+        'z-index': 1000
+    });
+
+    //make div transparent until animation is over
+    element.css("opacity", "0.0");
+
+    //set css properties to animate, an animation speed, and a callback to execute when animation is complete
+    temp.animate({'top': newOffset.top, 'left': newOffset.left}, 'slow', function(){
+        if(target.attr("id") == "player" | target.attr("id") =="opponent") {element.css("opacity", "1.0")}
+        else {element.css("opacity", "0.3")}
+        temp.remove();
+     });
+}
+
+
 function checkCondition(attacker, defender){// parameters are javascript objects
 
     if(attacker.hp < 1){//if attacker (player) is dead
@@ -94,7 +130,8 @@ function checkCondition(attacker, defender){// parameters are javascript objects
         //set approrpriate classes and move DOM to gravyard div
         var player_dom = $("#" + attacker.id);
         player_dom.addClass("faded");
-        $("#graveyard").append(player_dom);
+
+        moveAnimate(player_dom, $("#graveyard"))
 
         //modify globals
         state = states[3];
@@ -108,8 +145,8 @@ function checkCondition(attacker, defender){// parameters are javascript objects
         //set approrpriate classes and move DOM to gravyard div
         var defender_dom = $("#" + defender.id);
         defender_dom.addClass("faded");
-        $("#graveyard").append(defender_dom);
-
+        moveAnimate(defender_dom, $("#graveyard"))
+        
         //unfade cards in lobby
         $("#lobby").children().removeClass("faded");
 
@@ -165,7 +202,7 @@ function combatLog(attacker, defender, result){
 }
 
 
-function updateStats(attacker, defender){// parameters are javascript objects
+function updateCardStats(attacker, defender){// parameters are javascript objects
 
     //update player stats
     if(attacker.hp > 0){
@@ -202,7 +239,7 @@ function fight(attacker, defender){// this is the attack button, parameters are 
     player.hp -= opponent.base_atk;
     player.atk_pts += player.base_atk;
 
-    updateStats(player, opponent);
+    updateCardStats(player, opponent);
 
     var outcome = checkCondition(player, opponent);
 
