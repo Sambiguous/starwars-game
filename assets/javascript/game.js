@@ -4,24 +4,26 @@ var fighters = [];
 
 
 
-function characterCreator(name, hp, atk_pts){
+function characterCreator(name, hp, atk_pts, counter){
     output = {};
     output.base_atk = atk_pts;
     output.name = name;
     output.id = name.split(" ")[0].toLowerCase();
     output.hp = hp;
+    output.counter = counter;
     output.atk_pts = atk_pts;
     output.img = output.id + ".png"
     return output;
     }
 
-var red = characterCreator("Red Knight", 105, 6);
-var orange = characterCreator("Orange Knight", 100, 5);
-var green = characterCreator("Green Knight", 220, 5);
-var blue = characterCreator("Blue Knight", 120, 6);
-var grey = characterCreator("Grey Knight", 225, 8);
+// character stats courtesy of Andrew
+var red = characterCreator("Red Knight", 200, 5, 40);
+var orange = characterCreator("Orange Knight", 100, 20, 30);
+//var green = characterCreator("Green Knight", 220, 5);
+var blue = characterCreator("Blue Knight", 180, 12, 20);
+var grey = characterCreator("Grey Knight", 170, 15, 10);
 
-var char_array = [red, orange, green, blue, grey];
+var char_array = [red, orange, blue, grey];
 
 function fillLobby(chars){
     var img_path = "assets/images/"
@@ -132,7 +134,25 @@ function moveAnimate(element, target){
 
 function checkCondition(attacker, defender){// parameters are javascript objects
 
-    if(attacker.hp < 1){//if attacker (player) is dead
+    if(defender.hp < 1){//if defender (opponent) is dead...
+        
+        //set approrpriate classes and move DOM to gravyard div
+        var defender_dom = $("#" + defender.id);
+        defender_dom.addClass("faded");
+        moveAnimate(defender_dom, $("#graveyard"))
+                
+        //unfade cards in lobby
+        $("#lobby").children().removeClass("faded");
+        
+        //modify globals
+        state = states[1];
+        fighters = fighters.slice(0, 1);
+        
+        //return string that will be passed to the combatLog() function
+        return "won";
+    }
+
+    else if(attacker.hp < 1){//if attacker (player) is dead
         
         //set approrpriate classes and move DOM to gravyard div
         var player_dom = $("#" + attacker.id);
@@ -147,23 +167,7 @@ function checkCondition(attacker, defender){// parameters are javascript objects
 
         return "lost";
     }
-    else if(defender.hp < 1){//if defender (opponent) is dead...
 
-        //set approrpriate classes and move DOM to gravyard div
-        var defender_dom = $("#" + defender.id);
-        defender_dom.addClass("faded");
-        moveAnimate(defender_dom, $("#graveyard"))
-        
-        //unfade cards in lobby
-        $("#lobby").children().removeClass("faded");
-
-        //modify globals
-        state = states[1];
-        fighters = fighters.slice(0, 1);
-
-        //return string that will be passed to the combatLog() function
-        return "won";
-    }
     //return string that will be passed to the combatLog() function
     return "none";
 }
@@ -174,7 +178,7 @@ function combatLog(attacker, defender, result){
     //if nobody was defeated
     if(result == "none"){
         entry.html("<p>You hit<b><span style='color: " + defender.id + ";'> " + defender.name + "</span></b> for<span class='log_dmg'> " + attacker.atk_pts + " </span>damage</p>" +
-                    "<p><b><span style='color: " + defender.id + ";'> " + defender.name + "</span></b> hits you back for<span class='log_dmg'> " + defender.base_atk + " </span>damage</p>");
+                    "<p><b><span style='color: " + defender.id + ";'> " + defender.name + "</span></b> hits you back for<span class='log_dmg'> " + defender.counter + " </span>damage</p>");
         
         $("#combatLog").prepend(entry);
     }
@@ -241,14 +245,16 @@ function fight(attacker, defender){// this is the attack button, parameters are 
     opponent = defender.data();
 
     opponent.hp -= player.atk_pts;
-    player.hp -= opponent.base_atk;
-    player.atk_pts += player.base_atk;
+    player.hp -= opponent.counter;
+    
 
     updateCardStats(player, opponent);
 
     var outcome = checkCondition(player, opponent);
 
     combatLog(player, opponent, outcome);
+
+    player.atk_pts += player.base_atk;
 }
 
 $(document).ready(function(){
