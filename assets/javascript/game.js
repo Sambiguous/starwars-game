@@ -114,14 +114,21 @@ function moveAnimate(element, target){
     //make div transparent until animation is over
     element.css("opacity", "0.0");
 
-    //set css properties to animate, an animation speed, and a callback to execute when animation is complete
-    temp.animate({'top': newOffset.top, 'left': newOffset.left}, 'slow', function(){
-        if(target.attr("id") == "player" | target.attr("id") =="opponent") {element.css("opacity", "1.0")}
-        else {element.css("opacity", "0.3")}
-        temp.remove();
-     });
-}
+    var moveToArena = (target.attr("id") == "player" | target.attr("id") =="opponent")
 
+    if(moveToArena){
+        temp.animate({'top': newOffset.top, 'left': newOffset.left}, 'slow', function(){
+        element.css("opacity", "1.0");
+        temp.remove();   
+        })
+    }
+    else{
+        temp.animate({'top': newOffset.top, 'left': newOffset.left, 'opacity': 0.3}, 'slow', function(){
+            element.css("opacity", "0.3");
+            temp.remove();
+        })
+    }
+}
 
 function checkCondition(attacker, defender){// parameters are javascript objects
 
@@ -137,7 +144,7 @@ function checkCondition(attacker, defender){// parameters are javascript objects
         state = states[3];
 
         //return string that will be passed to the combatLog() function
-        console.log("lost returned");
+
         return "lost";
     }
     else if(defender.hp < 1){//if defender (opponent) is dead...
@@ -155,11 +162,9 @@ function checkCondition(attacker, defender){// parameters are javascript objects
         fighters = fighters.slice(0, 1);
 
         //return string that will be passed to the combatLog() function
-        console.log("won returned")
         return "won";
     }
     //return string that will be passed to the combatLog() function
-    console.log("none returned");
     return "none";
 }
 
