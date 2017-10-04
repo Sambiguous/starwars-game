@@ -1,3 +1,8 @@
+h1 {
+    margin: 0px;
+    padding: 0px;
+}
+
 .card {
     color: white;
     border: 3px solid green;
@@ -33,23 +38,11 @@
     text-align: center;
 }
 
-.picked {
-    width: 100%;
-}
-
 .enemy {
     border-color: red;
 }
 
-.enemy_name {
-    color: blue;
-    font-weight: bold;
-}
 
-.log_dmg {
-    color: tomato;
-    font-weight: bold;
-}
 
 .entry {
     background-color: #8D4949;
@@ -60,6 +53,16 @@
     height: 250px;
 }
 
+.log_dead {
+    background-color: black;
+    color: white;
+}
+
+.log_dmg {
+    color: tomato;
+    font-weight: bold;
+}
+
 .faded {
     opacity: 0.5;
 }
@@ -68,52 +71,55 @@
     text-align: center;
 }
 
-#start {
-    border: 3px solid black;
-    border-radius: 5px;
-    text-align: center;
-    float: right;
-    display: inline-block;
-}
-
 #lobby {
     background-color: grey;
     text-align: center;
 }
 
+.room {
+    min-height: 180px;
+}
+
 #vs {
+    vertical-align: bottom;
     text-align: center;
 }
 
 
 #vs img {
-    margin: auto;
+    margin: 0px auto 20px auto;
     display: block;
+    width: 50%;
     max-height: 100px;
-    max-width: 100px;
 }
 
+#arena {
+    min-height: 210px;
+    text-align: center;
+}
+
+
+
 .arena_div {
+    vertical-align: top;
+    text-align: center;
     display: inline-block;
     width: 30%;
     margin: 0px;
 }
 
-
-@media only screen and (min-width: 991px){
- 
+.arena_div h3 {
+    margin: 0px;
 }
 
-@media only screen and (min-width: 768px) and (max-width: 991px) {
-    /*this is straight up voodoo magic from stack overflow.
-    its purpose is to control the character images overflowing
-    their parent divs as the page shrinks*/
-    .card img {
-        position: relative;
-        left: 50%;
-        -webkit-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        -o-transform: translateX(-50%);
-        transform: translateX(-50%);
+@media only screen and (max-width: 768px) {
+    #combatLog {
+        height: 60px;
     }
-    }
+}
+
+
+
+
+
+

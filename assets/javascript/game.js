@@ -15,11 +15,11 @@ function characterCreator(name, hp, atk_pts){
     return output;
     }
 
-var red = characterCreator("Red Knight", 100, 10);
-var orange = characterCreator("Orange Knight", 100, 10);
-var green = characterCreator("Green Knight", 100, 10);
-var blue = characterCreator("Blue Knight", 100, 10);
-var grey = characterCreator("Grey Knight", 100, 10);
+var red = characterCreator("Red Knight", 105, 6);
+var orange = characterCreator("Orange Knight", 100, 5);
+var green = characterCreator("Green Knight", 220, 5);
+var blue = characterCreator("Blue Knight", 120, 6);
+var grey = characterCreator("Grey Knight", 225, 8);
 
 var char_array = [red, orange, green, blue, grey];
 
@@ -60,7 +60,7 @@ function select(card){
     if(state == "select player"){
 
         //add appropriate classes to selected character and move him to the arena
-        cardDiv.addClass("user picked hide_ovf");
+        cardDiv.addClass("user");
         $("#player").append($('.user'));
 
         //set state to 'select opponent'
@@ -70,7 +70,7 @@ function select(card){
     else if(state == "select opponent"){
 
         //add appropriate classes to selected character, and move him to the arena
-        cardDiv.addClass("enemy picked hide_ovf");
+        cardDiv.addClass("enemy");
         $("#opponent").append(cardDiv);
 
         //fade out remaining characters
@@ -94,18 +94,20 @@ function checkCondition(attacker, defender){// parameters are javascript objects
         //set approrpriate classes and move DOM to gravyard div
         var player_dom = $("#" + attacker.id);
         player_dom.addClass("faded");
-        player_dom.removeClass("picked");
         $("#graveyard").append(player_dom);
 
         //modify globals
         state = states[3];
+
+        //return string that will be passed to the combatLog() function
+        console.log("lost returned");
+        return "lost";
     }
     else if(defender.hp < 1){//if defender (opponent) is dead...
 
         //set approrpriate classes and move DOM to gravyard div
         var defender_dom = $("#" + defender.id);
         defender_dom.addClass("faded");
-        defender_dom.removeClass("picked");
         $("#graveyard").append(defender_dom);
 
         //unfade cards in lobby
@@ -114,15 +116,52 @@ function checkCondition(attacker, defender){// parameters are javascript objects
         //modify globals
         state = states[1];
         fighters = fighters.slice(0, 1);
-        console.log(fighters);
+
+        //return string that will be passed to the combatLog() function
+        console.log("won returned")
+        return "won";
     }
+    //return string that will be passed to the combatLog() function
+    console.log("none returned");
+    return "none";
 }
 
-function combatLog(attacker, defender){
+function combatLog(attacker, defender, result){
     var entry = $("<div class='entry'></div>")
-    entry.html("<p>You hit<span style='color: " + defender.id + ";'> " + defender.name + "</span> for<span class='log_dmg'> " + attacker.atk_pts + " </span>damage</p>" +
-                "<p><span style='color: " + defender.id + ";'> " + defender.name + "</span> hits you back for<span class='log_dmg'> " + defender.base_atk + " </span>damage</p>");
-    $("#combatLog").prepend(entry);
+
+    //if nobody was defeated
+    if(result == "none"){
+        entry.html("<p>You hit<b><span style='color: " + defender.id + ";'> " + defender.name + "</span></b> for<span class='log_dmg'> " + attacker.atk_pts + " </span>damage</p>" +
+                    "<p><b><span style='color: " + defender.id + ";'> " + defender.name + "</span></b> hits you back for<span class='log_dmg'> " + defender.base_atk + " </span>damage</p>");
+        
+        $("#combatLog").prepend(entry);
+    }
+
+    //if the opponent was defeated...
+    else if(result == "won"){
+        entry.html("<p>You defeated<b><span style='color: " + defender.id + ";'> " + defender.name + "</span></b></p>" +
+                    "<p>Choose your next opponent!</p>");
+        entry.css("background-color", "green");
+
+        $("#combatLog").prepend(entry);
+
+        //check to see if there are any opponents left
+        if($("#lobby").children().length == 0){
+            var victory = $("<div class='entry'></div>")
+            victory.html("<h1><b>Congratulations, you win!!!</b></h1>");
+            victory.css("background-color", "green");
+            victory.css("color", "gold");
+            $("#combatLog").prepend(victory);
+        }
+    }
+
+    //if you were defeated...
+    else if(result == "lost"){
+        entry.html("<p>You have been defeated by <b><span style='color: " + defender.id + ";'> " + defender.name + "</span></b></p>" +
+                    "<p>Reset the game and try again!");
+        entry.addClass("log_dead");
+        $("#combatLog").prepend(entry);
+    }
 }
 
 
@@ -131,10 +170,11 @@ function updateStats(attacker, defender){// parameters are javascript objects
     //update player stats
     if(attacker.hp > 0){
         $("#" + attacker.id + " .hp").html("HP: " + attacker.hp);
+
     }
     else{
         $("#" + attacker.id + " .hp").html("HP: 0");
-        
+       
     }
     $("#" + attacker.id + " .atk").html("ATK: " + attacker.atk_pts);
 
@@ -144,13 +184,15 @@ function updateStats(attacker, defender){// parameters are javascript objects
     }
     else{
         $("#" + defender.id + " .hp").html("HP: 0");
+        
     }
     $("#" + defender.id + " .atk").html("ATK: " + defender.atk_pts);
-    combatLog(attacker, defender);
+    
 };
 
 function fight(attacker, defender){// this is the attack button, parameters are DOM objects
 
+    //assure state is set to "fighting"
     if(state != states[2]){return};
 
     player = attacker.data();
@@ -162,10 +204,9 @@ function fight(attacker, defender){// this is the attack button, parameters are 
 
     updateStats(player, opponent);
 
-    checkCondition(player, opponent);
+    var outcome = checkCondition(player, opponent);
 
-    //display hp and atk pts for atker and dfnder 
-    //HEALTH BAR
+    combatLog(player, opponent, outcome);
 }
 
 $(document).ready(function(){

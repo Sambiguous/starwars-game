@@ -17,14 +17,21 @@
 <div class="container-fluid">
     <div class="col-md-6 col-sm-6 col-xs-12">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12 col-xs-12" id="arena">
-                    <div class="arena_div" id="player"></div>
-                    <div class="arena_div hide_ovf" id="vs">
-                        <img src="assets/images/blank.png"/>
-                        <button id="atk_btn" class="faded" type="button" onclick"#">Attack</button>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Arena</div>
+                    <div class="panel-body room" id="arena">
+                        <div class="arena_div" id="player">
+                            <h3><b>Player</b></h3>
+                        </div>
+                        <div class="arena_div hide_ovf" id="vs">
+                            <img src="assets/images/blank.png"/>
+                            <button id="atk_btn" class="faded" type="button" onclick"#">Attack</button>
+                        </div>
+                        <div class="arena_div" id="opponent">
+                            <h3><b>Defender</b></h3>
+                        </div>
                     </div>
-                    <div class="arena_div" id="opponent"></div>
-            </div>
+                </div> 
         </div>
         <div class="row">
             <div class="panel panel-default">
@@ -37,10 +44,16 @@
     </div>
     <div class="col-md-6 col-sm-6 col-xs-12">
         <div class="row">
-            <div class="panel" id="lobby"></div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Lobby</div>
+                <div class="panel-body room" id="lobby"></div>
+            </div>
         </div>
         <div class="row">
-            <div class="panel" id="graveyard"></div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Graveyard</div>
+                <div class="panel-body room" id="graveyard"></div>
+            </div>
         </div>
     </div>
 </div>
